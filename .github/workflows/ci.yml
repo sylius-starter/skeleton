@@ -1,0 +1,51 @@
+# CI of the skeleton itself: creates a Sylius project from it, then runs the
+# project checks. Removed by "castor sylius:init", which puts .github.dist in place.
+name: Skeleton
+
+"on":
+    push:
+        branches: ["main"]
+    pull_request:
+        paths-ignore:
+            - "*.md"
+    schedule:
+        - cron: "0 3 * * MON"
+    workflow_dispatch: ~
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+env:
+    # Fix for symfony/console color detection. We know GitHub Actions can handle it.
+    ANSICON: 1
+
+jobs:
+    init:
+        name: Create a Sylius project
+        runs-on: ubuntu-latest
+        timeout-minutes: 45
+        steps:
+            - uses: actions/checkout@v6
+
+            - uses: docker/setup-buildx-action@v4
+
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "8.4"
+                  coverage: none
+                  tools: composer, castor
+
+            - name: Create the project
+              run: castor sylius:init --no-interaction
+
+            - name: The skeleton files are cleaned up
+              run: |
+                  test ! -e .castor/tasks/init.php
+                  test ! -e .github.dist
+                  test ! -e README.dist.md
+                  test -f .github/workflows/ci.yml
+                  test -f compose.yaml

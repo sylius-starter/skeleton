@@ -1,0 +1,13 @@
+# Castor
+/.castor/vendor/
+/.castor.stub.php
+
+# Docker (compose.yaml is yours: commit it)
+/compose.generated.yaml
+/compose.override.yaml
+/.home/
+
+# IDE & OS
+/.idea/
+/.vscode/
+.DS_Store

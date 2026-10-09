@@ -1,0 +1,11 @@
+{
+    "require": {
+        "sylius-starter/sylius-starter": "@dev"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/sylius-starter/sylius-starter.git"
+        }
+    ]
+}
